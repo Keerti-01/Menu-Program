@@ -1,0 +1,58 @@
+pip install requests beautifulsoup4 pyttsx3
+import requests
+from bs4 import BeautifulSoup
+import pyttsx3
+
+def read_web_page(url):
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        return soup.get_text()
+    else:
+        return None
+
+def save_to_file(filename, content):
+    with open(filename, 'w', encoding='utf-8') as file:
+        file.write(content)
+
+def text_to_speech(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+def main():
+    while True:
+        print("\n--- Menu ---")
+        print("1. Read web page")
+        print("2. Save to file")
+        print("3. Read content aloud")
+        print("4. Exit")
+        choice = input("Enter your choice (1/2/3/4): ")
+
+        if choice == "1":
+            url = input("Enter the URL of the web page: ")
+            content = read_web_page(url)
+            if content:
+                print(f"\nContent:\n{content}")
+            else:
+                print("Failed to read the web page. Please check the URL.")
+
+        elif choice == "2":
+            filename = input("Enter the filename to save the content: ")
+            content = input("Enter the content to save: ")
+            save_to_file(filename, content)
+            print(f"Content saved to '{filename}'.")
+
+        elif choice == "3":
+            text = input("Enter the text to read aloud: ")
+            text_to_speech(text)
+
+        elif choice == "4":
+            print("Exiting the program.")
+            break
+
+        else:
+            print("Invalid choice. Please select a valid option (1/2/3/4).")
+
+if __name__ == "__main__":
+    main()
